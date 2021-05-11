@@ -1,0 +1,36 @@
+type Products {
+    name: String!
+    category: String!
+    price: Float!
+    currency: String!
+    image: Image
+    bestseller: Boolean!
+    featured: Boolean!
+    details: Details
+}
+
+type Image @embedded{
+    src: String
+    alt: String
+}
+
+type Details @embedded{
+    dimmentions: Size
+    size: Int
+    description: String
+    recommendations: [Recommendations]
+}
+
+type Size @embedded{
+    width: Int
+    height: Int
+}
+
+type Recommendations @embedded{
+    src: String
+    alt: String
+}
+
+type Query{
+    allProducts: [Products]
+}

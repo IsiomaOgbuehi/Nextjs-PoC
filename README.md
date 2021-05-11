@@ -2,7 +2,64 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+First, install node modules:
+
+```
+npm install
+```
+
+## SETUP FAUNA DB WITH THIS SCHEMA. Save code in a .gql file format and POPULATE DATABASE.:
+
+```
+type Products {
+    name: String!
+    category: String!
+    price: Float!
+    currency: String!
+    image: Image
+    bestseller: Boolean!
+    featured: Boolean!
+    details: Details
+}
+
+type Image @embedded{
+    src: String
+    alt: String
+}
+
+type Details @embedded{
+    dimmentions: Size
+    size: Int
+    description: String
+    recommendations: [Recommendations]
+}
+
+type Size @embedded{
+    width: Int
+    height: Int
+}
+
+type Recommendations @embedded{
+    src: String
+    alt: String
+}
+
+type Query{
+    allProducts: [Products]
+}
+```
+
+## RUN SERVER LOCALLY:
+
+### Setup local environment file: .env in root directory
+
+```
+# Add FAUNADB_SECRET_KEY:
+FAUNADB_SECRET_KEY=db_secret_from_faunadb
+
+```
+
+#### Start Server:
 
 ```bash
 npm run dev
