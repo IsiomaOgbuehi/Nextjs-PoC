@@ -1,65 +1,53 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import React, {useState} from 'react';
+import Head from 'next/head';
+import styles from '../styles/Home.module.css';
+import { ProductBanner } from '../components/product-banner';
+import { Layout } from '../components/layout';
+import { Nav } from '../components/nav';
+import { ProductListingLayout } from '../components/product-listing-layout';
+import { ProductListingInnerLayout } from '../components/productListing/product-listing-inner-layout';
+import { getProducts } from '../lib/get-products';
+import { CartContext } from '../util/CartContext'
 
-export default function Home() {
+export async function getStaticProps() {
+    // console.log(await getProducts());
+    const data = await getProducts();
+
+
+    return{
+        props: {
+            data
+        },
+        revalidate: 300
+    }
+
+}
+
+export default function Home({data}) {
+
+  const [cartArr, setCartArr] = useState([]);
+
   return (
     <div className={styles.container}>
       <Head>
-        <title>Create Next App</title>
+        <title>E-Commerce Solution</title>
         <link rel="icon" href="/favicon.ico" />
+        <link href='https://fonts.googleapis.com/css?family=Archivo' rel='stylesheet' />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
+      <CartContext.Provider value={{cartArr, setCartArr}}>
+        <Nav />
+        <Layout>
+            <ProductBanner products={data} />
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+            <ProductListingLayout>
+                <ProductListingInnerLayout products={data} />
+            </ProductListingLayout>
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
+        </Layout>
+      </CartContext.Provider>
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
     </div>
   )
 }
